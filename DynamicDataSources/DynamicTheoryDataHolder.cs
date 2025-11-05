@@ -70,19 +70,14 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
 
                 if (_testDataType == null)
                 {
-                    setTestDataType();
+                    _testDataType = testDataType;
                 }
 
                 if (_testDataType != testDataType)
                 {
                     theoryData = initTheoryData<TRow>();
-                    setTestDataType();
+                    _testDataType = testDataType;
                 }
-
-                #region Local methods
-                void setTestDataType()
-                => _testDataType = testDataType;
-                #endregion
             }
 
             var testCaseName = testData.GetTestCaseName();
