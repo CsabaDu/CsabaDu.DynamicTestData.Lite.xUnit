@@ -72,8 +72,7 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
                 {
                     _testDataType = testDataType;
                 }
-
-                if (_testDataType != testDataType)
+                else if (_testDataType != testDataType)
                 {
                     theoryData = initTheoryData<TRow>();
                     _testDataType = testDataType;
