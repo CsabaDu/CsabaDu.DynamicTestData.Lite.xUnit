@@ -26,7 +26,7 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
 {
     #region Private fields
     private Type? _testDataType = null;
-    private readonly HashSet<string> TestCaseNames = [];
+    private readonly HashSet<string> testCaseNames = [];
     #endregion
 
     #region Override methods
@@ -34,7 +34,7 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
     public override void ResetDataHolder()
     {
         _testDataType = null;
-        TestCaseNames.Clear();
+        testCaseNames.Clear();
         base.ResetDataHolder();
     }
     #endregion
@@ -45,51 +45,46 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
         switch (ArgsCode)
         {
             case ArgsCode.Instance:
-                add(testData);
+                add(() => testData);
                 break;
             case ArgsCode.Properties:
-                var testDataToParams =
-                    testData.ToParams(ArgsCode, PropsCode);
-                add(testDataToParams);
+                add(() => testData.ToParams(
+                    ArgsCode,
+                    PropsCode));
                 break;
             default:
                 break;
         }
 
         #region Local methods
-        void add<TRow>(TRow row)
+        void add<TRow>(Func<TRow> getRow)
         {
             if (DataHolder is not TheoryData<TRow> theoryData)
             {
-                theoryData = initTheoryData<TRow>();
-            }
-
-            if (ArgsCode == ArgsCode.Properties)
-            {
-                var testDataType = typeof(TTestData);
-
-                if (_testDataType == null)
+                theoryData = ArgsCode switch
                 {
-                    _testDataType = testDataType;
-                }
-                else if (_testDataType != testDataType)
-                {
-                    theoryData = initTheoryData<TRow>();
-                    _testDataType = testDataType;
-                }
-            }
+                    ArgsCode.Instance
+                    or ArgsCode.Properties
+                    when _testDataType == typeof(TTestData) => initTheoryData<TRow>(),
+                    _ => throw new InvalidOperationException(
+                        "'ArgsCode' property value is invalid.",
+                        ArgsCode.GetInvalidEnumArgumentException(nameof(ArgsCode))),
+                };
+            };
 
             var testCaseName = testData.GetTestCaseName();
 
-            if (TestCaseNames.Add(testCaseName))
+            if (testCaseNames.Add(testCaseName))
             {
-                theoryData.Add(row);
+                theoryData.Add(getRow());
             }
         }
 
         TheoryData<TRow> initTheoryData<TRow>()
         {
-            TestCaseNames.Clear();
+            testCaseNames.Clear();
+            _testDataType = typeof(TTestData);
+
             return [];
         }
         #endregion
