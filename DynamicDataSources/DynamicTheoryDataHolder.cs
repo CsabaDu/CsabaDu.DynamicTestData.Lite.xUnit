@@ -45,10 +45,10 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
         switch (ArgsCode)
         {
             case ArgsCode.Instance:
-                add(() => testData);
+                add(testData);
                 break;
             case ArgsCode.Properties:
-                add(() => testData.ToParams(
+                add(testData.ToParams(
                     ArgsCode,
                     PropsCode));
                 break;
@@ -57,7 +57,8 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
         }
 
         #region Local methods
-        void add<TRow>(Func<TRow> getRow)
+        #endregion
+        void add<TRow>(TRow row)
         {
             if (DataHolder is not TheoryData<TRow> theoryData)
             {
@@ -76,7 +77,7 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
 
             if (testCaseNames.Add(testCaseName))
             {
-                theoryData.Add(getRow());
+                theoryData.Add(row);
             }
         }
 
@@ -87,7 +88,6 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
 
             return [];
         }
-        #endregion
     }
     #endregion
     #endregion
