@@ -19,14 +19,12 @@ namespace CsabaDu.DynamicTestData.Lite.xUnit.DynamicDataSources;
 /// </para>
 /// </remarks>
 /// <param name="argsCode">The strategy for converting test data to method arguments</param>
-public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
-: DynamicDataSource<TheoryData>(
-    argsCode,
-    PropsCode.Expected)
+public abstract class DynamicTheoryDataSource(ArgsCode argsCode)
+: DynamicDataHolderSource<TheoryData>(argsCode, PropsCode.Expected)
 {
     #region Private fields
     private Type? _testDataType = null;
-    private readonly HashSet<string> testCaseNames = [];
+    private HashSet<string> _testCaseNames = [];
     #endregion
 
     #region Override methods
@@ -34,12 +32,12 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
     public override void ResetDataHolder()
     {
         _testDataType = null;
-        testCaseNames.Clear();
+        _testCaseNames.Clear();
         base.ResetDataHolder();
     }
     #endregion
 
-    #region Add
+    #region Add<TTestData>
     protected override void Add<TTestData>(TTestData testData)
     {
         switch (ArgsCode)
@@ -57,36 +55,43 @@ public abstract class DynamicTheoryDataHolder(ArgsCode argsCode)
         }
 
         #region Local methods
-        #endregion
         void add<TRow>(TRow row)
         {
-            if (DataHolder is not TheoryData<TRow> theoryData)
+            if (DataHolder is not TheoryData<TRow> theoryData
+                || ArgsCode == ArgsCode.Properties
+                && _testDataType != typeof(TTestData))
             {
-                theoryData = ArgsCode switch
-                {
-                    ArgsCode.Instance
-                    or ArgsCode.Properties
-                    when _testDataType == typeof(TTestData) => initTheoryData<TRow>(),
-                    _ => throw new InvalidOperationException(
-                        "'ArgsCode' property value is invalid.",
-                        ArgsCode.GetInvalidEnumArgumentException(nameof(ArgsCode))),
-                };
-            };
+                InitDataHolder(testData);
+                return;
+            }
 
-            var testCaseName = testData.GetTestCaseName();
-
-            if (testCaseNames.Add(testCaseName))
+            if (_testCaseNames.Add(testData.GetTestCaseName()))
             {
                 theoryData.Add(row);
             }
         }
+        #endregion
+    }
+    #endregion
 
-        TheoryData<TRow> initTheoryData<TRow>()
+    #region InitDataHolder<TTestData>
+    protected override void InitDataHolder<TTestData>(TTestData testData)
+    {
+        _testDataType = typeof(TTestData);
+        _testCaseNames = [testData.GetTestCaseName()];
+
+        switch (ArgsCode)
         {
-            testCaseNames.Clear();
-            _testDataType = typeof(TTestData);
-
-            return [];
+            case ArgsCode.Instance:
+                DataHolder = new TheoryData<TTestData>(testData);
+                break;
+            case ArgsCode.Properties:
+                DataHolder = new TheoryData<object?[]>(testData.ToParams(
+                    ArgsCode,
+                    PropsCode));
+                break;
+            default:
+                break;
         }
     }
     #endregion
