@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36623.8 d17.14
+VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsabaDu.DynamicTestData.Lite.xUnit", "CsabaDu.DynamicTestData.Lite.xUnit.csproj", "{B45494F5-0C83-4ED5-B921-BAEFECD398AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsabaDu.DynamicTestData.Lite", "..\CsabaDu.DynamicTestData.Lite\CsabaDu.DynamicTestData.Lite.csproj", "{904D4CF5-16E8-A0AA-3E79-B63E7FCBD619}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{B45494F5-0C83-4ED5-B921-BAEFECD398AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B45494F5-0C83-4ED5-B921-BAEFECD398AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B45494F5-0C83-4ED5-B921-BAEFECD398AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{904D4CF5-16E8-A0AA-3E79-B63E7FCBD619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{904D4CF5-16E8-A0AA-3E79-B63E7FCBD619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{904D4CF5-16E8-A0AA-3E79-B63E7FCBD619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{904D4CF5-16E8-A0AA-3E79-B63E7FCBD619}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

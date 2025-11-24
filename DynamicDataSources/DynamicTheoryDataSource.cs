@@ -57,11 +57,13 @@ public abstract class DynamicTheoryDataSource(ArgsCode argsCode)
         #region Local methods
         void add<TRow>(TRow row)
         {
-            var theoryData = DataHolder as TheoryData<TRow>;
-            bool typeMatches = ArgsCode == ArgsCode.Instance
-                || _testDataType == typeof(TTestData);
+            bool isDataHolderTyped =
+                IsDataHolderTyped(out TheoryData<TRow>? theoryData);
+            bool typeMatches =
+                ArgsCode == ArgsCode.Instance ||
+                _testDataType == typeof(TTestData);
 
-            Add(theoryData is not null && typeMatches,
+            Add(isDataHolderTyped && typeMatches,
                 testData,
                 addWithCheckedName);
 
