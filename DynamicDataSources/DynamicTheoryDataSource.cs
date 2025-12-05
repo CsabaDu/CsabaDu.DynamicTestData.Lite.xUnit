@@ -70,7 +70,7 @@ public abstract class DynamicTheoryDataSource(ArgsCode argsCode)
             #region Local methods
             void addWithCheckedName(TTestData testData)
             {
-                if (_testCaseNames.Add(testData.GetTestCaseName()))
+                if (_testCaseNames.Add(testData.TestCaseName))
                 {
                     theoryData!.Add(row);
                 }
@@ -86,7 +86,7 @@ public abstract class DynamicTheoryDataSource(ArgsCode argsCode)
     protected override void InitDataHolder<TTestData>(TTestData testData)
     {
         _testDataType = typeof(TTestData);
-        _testCaseNames = [testData.GetTestCaseName()];
+        _testCaseNames = [testData.TestCaseName];
 
         switch (ArgsCode)
         {
